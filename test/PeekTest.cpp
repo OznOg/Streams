@@ -39,12 +39,12 @@ TEST(PeekTest, MemberFunction) {
     Number::reset();
     MakeStream::from({Number(0), Number(1), Number(2)})
         | peek(&Number::accumulate)
-        | for_each([](Number n) { /* do nothing */ });
+        | for_each([](Number n [[maybe_unused]]) { /* do nothing */ });
     EXPECT_THAT(Number::elements, ElementsAre(0, 1, 2));
 
     Number::reset();
     MakeStream::from({Number(0), Number(1), Number(2)})
         | peek(&Number::accumulate_const)
-        | for_each([](Number n) { /* do nothing */ });
+        | for_each([](Number n [[maybe_unused]]) { /* do nothing */ });
     EXPECT_THAT(Number::elements, ElementsAre(0, 1, 2));
 }

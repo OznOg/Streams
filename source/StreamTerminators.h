@@ -87,7 +87,7 @@ inline auto first() {
 }
 
 inline auto last() {
-    return reduce([](auto&& first, auto&& second) { return second; })
+    return reduce([](auto&& first [[maybe_unused]], auto&& second) { return second; })
         .rename("stream::op::last");
 }
 
@@ -274,7 +274,6 @@ CLASS_SPECIALIZATIONS(not_all);
 template<typename OutputIterator>
 inline auto copy_to(OutputIterator out) {
     return make_terminator("stream::op::copy_to", [=](auto&& stream) mutable {
-        using T = StreamType<decltype(stream)>;
         auto& source = stream.getSource();
         while(source->advance()) {
             *out = *source->get();
@@ -287,7 +286,6 @@ inline auto copy_to(OutputIterator out) {
 template<typename OutputIterator>
 inline auto move_to(OutputIterator out) {
     return make_terminator("stream::op::move_to", [=](auto&& stream) mutable {
-        using T = StreamType<decltype(stream)>;
         auto& source = stream.getSource();
         while(source->advance()) {
             *out = std::move(*source->get());
@@ -311,7 +309,7 @@ inline auto random_sample(size_t size) {
         auto& source = stream.getSource();
 
         std::vector<T> results;
-        for(int i = 0; i < size; i++) {
+        for(size_t i = 0; i < size; i++) {
             if(source->advance()) {
                 results.push_back(std::move(*source->get()));
             } else {
@@ -321,14 +319,14 @@ inline auto random_sample(size_t size) {
 
         auto seed = std::chrono::system_clock::now().time_since_epoch().count();
         std::default_random_engine generator(seed);
-        auto random_index = [&generator](int upper) {
-            return std::uniform_int_distribution<int>(0, upper - 1)(generator);
+        auto random_index = [&generator](size_t upper) {
+            return std::uniform_int_distribution<size_t>(0, upper - 1)(generator);
         };
 
         size_t seen = size;
         while(source->advance()) {
             seen++;
-            int index = random_index(seen);
+            auto index = random_index(seen);
             if(index < size) {
                 results[index] = std::move(*source->get());
             } else {

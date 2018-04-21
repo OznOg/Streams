@@ -113,7 +113,7 @@ template<typename Return, typename Function, size_t last,
 struct SplatTuple<Return, Function, last, last, Tuple, Args...> {
     using TupleType = typename Tuple::Type;
 
-    static Return splat(Function&& function, const TupleType& tuple,
+    static Return splat(Function&& function, const TupleType& tuple [[maybe_unused]],
                         Args&&... args) {
         return function(std::forward<Args>(args)...);
     }

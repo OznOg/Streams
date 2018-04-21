@@ -22,7 +22,7 @@ public:
     bool advance_impl() override {
         current_ = std::make_shared<std::vector<T>>();
         current_->reserve(N_);
-        for(int i = 0; i < N_; i++) {
+        for(size_t i = 0; i < N_; i++) {
             if(source_->advance()) {
                 current_->emplace_back(std::move(*source_->get()));
             } else {

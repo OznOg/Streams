@@ -36,11 +36,11 @@ protected:
         return UpdateState::NotFinished;
     }
 
-    virtual UpdateState if_first_depleted() {
+    virtual UpdateState if_first_depleted() override {
         return UpdateState::StreamFinished;
     }
 
-    virtual UpdateState if_second_depleted() {
+    virtual UpdateState if_second_depleted() override {
         return UpdateState::StreamFinished;
     }
 

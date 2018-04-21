@@ -29,7 +29,6 @@ Stream<RemoveRef<T>> MakeStream::repeat(T&& value, size_t times) {
 
 template<typename Iterator>
 Stream<IteratorType<Iterator>> MakeStream::cycle(Iterator begin, Iterator end) {
-    using T = IteratorType<Iterator>;
     return MakeStream::repeat(make_pair(begin, end))
         | op::flat_map(splat([](Iterator b, Iterator e) {
             return MakeStream::from(b, e);
@@ -39,7 +38,6 @@ Stream<IteratorType<Iterator>> MakeStream::cycle(Iterator begin, Iterator end) {
 template<typename Iterator>
 Stream<IteratorType<Iterator>> MakeStream::cycle(Iterator begin, Iterator end,
                                                  size_t times) {
-    using T = IteratorType<Iterator>;
     return MakeStream::repeat(make_pair(begin, end), times)
          | op::flat_map(splat([](Iterator b, Iterator e) {
             return MakeStream::from(b, e);
@@ -285,7 +283,6 @@ Stream<ContainerType<Container>> MakeStream::from(const Container& cont) {
 
 template<typename Container>
 Stream<ContainerType<Container>> MakeStream::from_move(Container&& cont) {
-    using T = ContainerType<Container>;
     return MakeStream::cycle_move(std::forward<Container>(cont), 1);
 }
 
